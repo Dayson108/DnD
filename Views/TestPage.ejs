@@ -1,0 +1,27 @@
+<html>
+  <head>
+<title>Test Page</title>
+
+<script>
+
+function pageLoad(){
+	
+}
+
+function testfun(){
+	console.log("Woof");
+	console.log(JSON.parse(sessionStorage.getItem('FrameTest')));
+}
+
+
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onload="pageLoad()">
+Test Page
+<button onclick="testfun()">Test</button><br>
+</body></html>
+
+
+
+
