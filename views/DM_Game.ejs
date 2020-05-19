@@ -1,0 +1,60 @@
+<html>
+  <head>
+<title>DnD Notes</title>
+<script src="/socket.io/socket.io.js"></script>
+<script>var socket = io('/DnDNotes');</script>
+<script>
+
+
+//var GameID;
+
+function pageLoad(){
+	console.log("DMEditNotes.ejs loaded");
+	var GameID = <%- GameID %>;
+	
+	if(GameID == ""){
+		console.log("Game Reloaded");
+		//GameID = JSON.parse(sessionStorage.getItem('GameInfo'));
+	}else{
+		console.log("Game Loaded First Time");
+		sessionStorage.setItem('GameID', JSON.stringify(GameID));
+		console.log("You have joined Game: " + GameID);
+	}
+	
+}
+
+
+function showNotes(){
+	console.log("Showing Notes");
+	return false;
+}
+
+
+
+/*
+socket.on('RcvTest', function(msg){
+		console.log(msg);
+});
+*/
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onload="pageLoad()">
+This is the DM Tool for Editing Notes
+
+<br>
+<a href="#" onclick="return showNotes()">Notes</a>
+<br>
+
+
+<a href="/CreateNote">Create New Note</a>
+
+
+
+
+
+</body></html>
+
+
+
+

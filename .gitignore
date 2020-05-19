@@ -1,2 +1,13 @@
-node_modules/*
-OldCode/*
+# Node build artifacts
+node_modules
+npm-debug.log
+backup
+
+# Local development
+*.env
+*.dev
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml

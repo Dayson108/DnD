@@ -1,0 +1,338 @@
+<html>
+  <head>
+<title>Create Character</title>
+
+<script>
+var AccountInfo;
+
+function pageLoad(){
+	console.log("CreateCharacter.ejs loaded");
+	SetProficencyOptions();
+	
+	//PlayerRID = sessionStorage.getItem('PlayerRID');
+	//	sessionStorage.setItem('PlayerRID', AccountInfo.playerRID);
+	//sessionStorage.setItem('PlayerName', AccountInfo.playerName);
+	//sessionStorage.setItem('Username', AccountInfo.accountName);
+	
+	var temp = sessionStorage.getItem('AccountInfo');
+	AccountInfo = JSON.parse(temp);
+	
+	/*
+			var newPlayerInfo = {
+				playerRID: newPlayer.playerRID,
+				playerName: newPlayer.playerName,
+				accountName: newPlayer.accountName,
+			};			
+	*/			
+				
+				
+				
+	document.getElementById("PlayerRID").value = AccountInfo.playerRID;
+	document.getElementById("PlayerName").value = AccountInfo.playerName;
+	document.getElementById("username").value = AccountInfo.accountName;
+	
+}
+
+/*
+function flashRed(name){
+	if(document.getElementById(name).value == ""){
+		document.getElementById(name).style.backgroundColor = "red";
+		setTimeout(function(){ document.getElementById(name).style.backgroundColor = "white";}, 5000)
+	}
+}
+*/
+
+function characterCleanup(){
+
+	var MissingInfo = false;
+	var ErrorMessage = "";
+	document.getElementById('Errors').innerHTML = ErrorMessage;
+
+	//Array of Character Stats to confirm if non empty and are numbers
+	var FieldNames = [];
+	var FieldText = [];
+	FieldNames.push("Level");
+	FieldText.push("Character Level");
+	FieldNames.push("BaseAC");
+	FieldText.push("Character Base AC");
+	FieldNames.push("HPMax");
+	FieldText.push("Character HP Max");
+	FieldNames.push("CharSTR");
+	FieldText.push("Character Strength Value");
+	FieldNames.push("CharDEX");
+	FieldText.push("Character DEX Value");
+	FieldNames.push("CharCON");
+	FieldText.push("Character CON value");
+	FieldNames.push("CharINT");
+	FieldText.push("Character INT value");
+	FieldNames.push("CharWIS");
+	FieldText.push("Character WIS value");
+	FieldNames.push("CharCHA");
+	FieldText.push("Character CHA value");
+	
+	//Set all of the text boxes to white 
+	var i;
+	document.getElementById("CharacterName").style.backgroundColor = "white";
+	for (i = 0; i < FieldNames.length; i++) { 
+		document.getElementById(FieldNames[i]).style.backgroundColor = "white";
+	}
+
+	//Check if Character Name is Empty
+	if(document.getElementById("CharacterName").value == "")
+	{
+		document.getElementById("CharacterName").style.backgroundColor = "red";
+		ErrorMessage += "Missing Character Name<br>";
+		MissingInfo = true;
+	}
+	
+	
+	for (i = 0; i < FieldNames.length; i++) { 
+		if(document.getElementById(FieldNames[i]).value == "")
+		{
+			document.getElementById(FieldNames[i]).style.backgroundColor = "red";
+			ErrorMessage += "Missing " + FieldText[i] + "<br>"
+			MissingInfo = true;
+		}
+		
+		if(isNaN(document.getElementById(FieldNames[i]).value))
+		{
+			document.getElementById(FieldNames[i]).style.backgroundColor = "red";
+			ErrorMessage += "Input " + FieldText[i] + " is not a valid number<br>"
+			MissingInfo = true;
+		}
+	}
+	
+	if(MissingInfo == true){
+		document.getElementById('Errors').style.backgroundColor = "red";
+		//setTimeout(function(){ document.getElementById('Errors').style.backgroundColor = "white";}, 1000)
+		document.getElementById('Errors').innerHTML = ErrorMessage;
+		return false;
+	}
+	
+
+	
+	document.getElementById("STRProf").value = document.getElementById("STRProfCheck").checked;
+	document.getElementById("DEXProf").value = document.getElementById("DEXProfCheck").checked;
+	document.getElementById("CONProf").value = document.getElementById("CONProfCheck").checked;
+	document.getElementById("INTProf").value = document.getElementById("INTProfCheck").checked;
+	document.getElementById("WISProf").value = document.getElementById("WISProfCheck").checked;
+	document.getElementById("CHAProf").value = document.getElementById("CHAProfCheck").checked;
+	
+	document.getElementById("ProfBonus").value = Math.ceil(1+(Number(document.getElementById("Level").value) / 4));
+}
+
+
+	function setSkillProfiencyOptions(SkillProf){
+		var select = document.getElementById(SkillProf);
+		var option = document.createElement('option');
+		option.value = "-";
+		option.innerHTML = "-";
+		select.appendChild(option);
+		option = document.createElement('option');
+		option.value = "+";
+		option.innerHTML = "Prof";
+		select.appendChild(option);
+		option = document.createElement('option');
+		option.value = "++";
+		option.innerHTML = "Exp";
+		select.appendChild(option);
+	}
+	
+	function SetProficencyOptions(){
+		setSkillProfiencyOptions("AcrobaticsProf");
+		setSkillProfiencyOptions("InsightProf");
+		setSkillProfiencyOptions("PerformanceProf");
+		setSkillProfiencyOptions("AnimalHandlingProf");
+		setSkillProfiencyOptions("IntimidationProf");
+		setSkillProfiencyOptions("PersuasionProf");
+		setSkillProfiencyOptions("ArcanaProf");
+		setSkillProfiencyOptions("InvestigationProf");
+		setSkillProfiencyOptions("ReligionProf");
+		setSkillProfiencyOptions("AthleticsProf");
+		setSkillProfiencyOptions("MedicineProf");
+		setSkillProfiencyOptions("SleightOfHandProf");
+		setSkillProfiencyOptions("DeceptionProf");
+		setSkillProfiencyOptions("NatureProf");
+		setSkillProfiencyOptions("StealthProf");
+		setSkillProfiencyOptions("HistoryProf");
+		setSkillProfiencyOptions("PerceptionProf");
+		setSkillProfiencyOptions("SurvivalProf");
+		setSkillProfiencyOptions("CustomSkill1Prof");
+		setSkillProfiencyOptions("CustomSkill2Prof");
+		setSkillProfiencyOptions("CustomSkill3Prof");
+	}
+
+
+
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onload="pageLoad()">
+Character Creation
+<hr>
+	New Character:<br>
+	<form id="CharacterSheet" action="/SaveCharacter" method="POST" onsubmit="return characterCleanup()">
+		<input type="hidden" id="PlayerRID" name="PlayerRID" />
+		<input type="hidden" id="PlayerName" name="PlayerName" />
+		<input type="hidden" id="username" name="username" />
+		Please Input your character's stats.<br>
+		<hr>
+		Character Name: <textarea type="text" id="CharacterName" name="CharacterName" rows="1" cols="20">Test</textarea><br>
+		Level:<textarea id="Level" name="Level" rows="1" cols="10">1</textarea><br>
+
+		Race:<select id="Race" name="Race">
+			<option value ="Aarakocra">Aarakocra</option>
+			<option value="Deep Gnome">Deep Gnome</option>
+			<option value="Dwarf">Dwarf</option>
+			<option value="Elf">Elf</option>
+			<option value="Air Genasi">Genasi(Air)</option>
+			<option value="Earth Genasi">Genasi(Earth)</option>
+			<option value="Fire Genasi">Genasi(Fire)</option>
+			<option value="Water Genasi">Genasi(Water)</option>
+			<option value="Goliath">Goliath</option>
+			<option value="halfling">Halfling</option>
+			<option value="Human">Human</option>
+			<option value="Dragonborn">Dragonborn</option>
+			<option value="Gnome">Gnome</option>
+			<option value="Half-Elf">Half-Elf</option>
+			<option value="Half-Orf">Half-Orc</option>
+			<option value="Tiefling">Tiefling</option>
+		</select>	
+		
+		
+		
+		Class:<select id="Class" name="Class" onchange="ShowClassSpecific()">
+			<option value="Barbarian">Barbarian</option>
+			<option value="Bard">Bard</option>
+			<option value="Cleric">Cleric</option>
+			<option value="Druid">Druid</option>
+			<option value="Fighter">Fighter</option>
+			<option value="Monk">Monk</option>
+			<option value="Paladin">Paladin</option>
+			<option value="Ranger">Ranger</option>
+			<option value="Rogue">Rogue</option>
+			<option value="Sorcerer">Sorcerer</option>
+			<option value="Warlock">Warlock</option>
+			<option value="Wizard">Wizard</option>
+		</select><br>
+
+		Base Armor Class (no modifiers, usually 10): <input type="text" id="BaseAC" name="AC" style="width:30px" value="10"><br>
+		Hit Point Max<input type="text" id="HPMax" name="MaxHP" style="width:30px" value="1">
+		<hr>
+		
+		Saving Throws<br>
+		Input your character's core stats (not the +bonus)
+		<br>
+		Click the Checkbox if you are proficient in that saving throw.
+		<br>
+		<input type="text" id="CharSTR" name="STR" style="width: 30px" value="1"><input type="checkbox" id="STRProfCheck">STR<br>
+		<input type="text" id="CharDEX" name="DEX" style="width: 30px" value="1"><input type="checkbox" id="DEXProfCheck">DEX<br>
+		<input type="text" id="CharCON" name="CON" style="width: 30px" value="1"><input type="checkbox" id="CONProfCheck">CON<br>
+		<input type="text" id="CharINT" name="INT" style="width: 30px" value="1"><input type="checkbox" id="INTProfCheck">INT<br>
+		<input type="text" id="CharWIS" name="WIS" style="width: 30px" value="1"><input type="checkbox" id="WISProfCheck">WIS<br>
+		<input type="text" id="CharCHA" name="CHA" style="width: 30px" value="1"><input type="checkbox" id="CHAProfCheck">CHA
+		<hr>
+		
+		Select your proficiencies for your skills.
+		<table>
+			<tr>
+				<td><select id="AcrobaticsProf" name="AcrobaticsProf"></select>Acrobatics</td>
+				<td><select id="InsightProf" name="InsightProf"></select>Insight
+				<td><select id="PerformanceProf" name="PerformanceProf"></select>Performance
+			</tr>
+			<tr>
+				<td><select id="AnimalHandlingProf" name="AnimalHandlingProf"></select>Animal Handling</td>
+				<td><select id="IntimidationProf" name="IntimidationProf"></select>Intimidation</td>
+				<td><select id="PersuasionProf" name="PersuasionProf"></select>Persuasion</td>
+			</tr>
+			<tr>
+				<td><select id="ArcanaProf" name="ArcanaProf"></select>Arcana</td>
+				<td><select id="InvestigationProf" name="InvestigationProf"></select>Investigation</td>
+				<td><select id="ReligionProf" name="ReligionProf"></select>Religion</td>
+			</tr>
+			<tr>
+				<td><select id="AthleticsProf" name="AthleticsProf"></select>Athletics</td>
+				<td><select id="MedicineProf" name="MedicineProf"></select>Medicine</td>
+				<td><select id="SleightOfHandProf" name="SleightOfHandProf"></select>Sleight Of Hand</td>
+			</tr>
+			<tr>
+				<td><select id="DeceptionProf" name="DeceptionProf"></select>Deception</td>
+				<td><select id="NatureProf" name="NatureProf"></select>Nature</td>
+				<td><select id="StealthProf" name="StealthProf"></select>Stealth</td>
+			</tr>
+			<tr>
+				<td><select id="HistoryProf" name="HistoryProf"></select>History</td>
+				<td><select id="PerceptionProf" name="PerceptionProf"></select>Perception</td>
+				<td><select id="SurvivalProf" name="SurvivalProf"></select>Survival</td>
+			</tr>
+			
+			
+			<tr>
+				<td colspan="3">
+					The blanks below are for custom skills not included above.<br>
+					Leave blank if no custom skills.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<select id="CustomSkill1Prof" name="CustomSkill1Prof"></select>
+					<input type="text" id="CustomSkill1Name" name="CustomSkill1Name" style="width:40px">
+					<select id="CustomSkill1Stat" name="CustomSkill1Stat">
+						<option value ="STR">STR</option>
+						<option value="DEX">DEX</option>
+						<option value="CON">CON</option>
+						<option value="INT">INT</option>
+						<option value="WIS">WIS</option>
+						<option value="CHA">CHA</option>
+					</select>	
+				</td>
+				
+				<td>
+					<select id="CustomSkill2Prof" name="CustomSkill2Prof"></select>
+					<input type="text" id="CustomSkill2Name" name="CustomSkill2Name" style="width:40px">
+					<select id="CustomSkill2Stat" name="CustomSkill2Stat">
+						<option value ="STR">STR</option>
+						<option value="DEX">DEX</option>
+						<option value="CON">CON</option>
+						<option value="INT">INT</option>
+						<option value="WIS">WIS</option>
+						<option value="CHA">CHA</option>
+					</select>	
+				</td>
+				<td>
+					<select id="CustomSkill3Prof" name="CustomSkill3Prof"></select>
+					<input type="text" id="CustomSkill3Name" name="CustomSkill3Name" style="width:40px">
+					<select id="CustomSkill3Stat" name="CustomSkill3Stat">
+						<option value ="STR">STR</option>
+						<option value="DEX">DEX</option>
+						<option value="CON">CON</option>
+						<option value="INT">INT</option>
+						<option value="WIS">WIS</option>
+						<option value="CHA">CHA</option>
+					</select>	
+				</td>
+			</tr>
+		</table>
+		
+		<hr>			
+
+		<input type="hidden" id="STRProf" name="STRProf" value="false"/>
+		<input type="hidden" id="DEXProf" name="DEXProf" value="false"/>
+		<input type="hidden" id="CONProf" name="CONProf" value="false"/>
+		<input type="hidden" id="INTProf" name="INTProf" value="false"/>
+		<input type="hidden" id="WISProf" name="WISProf" value="false"/>
+		<input type="hidden" id="CHAProf" name="CHAProf" value="false"/>
+
+		<input type="hidden" id="ProfBonus" name="ProfBonus" value="0"/>
+				
+		<hr>
+		<p id="Errors"></p>
+		<button type="submit">Submit</button>
+		
+
+
+</body></html>
+
+
+
+

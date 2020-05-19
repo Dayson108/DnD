@@ -1,0 +1,87 @@
+<html><head>
+<title>DndTool</title>
+<script>
+
+
+function flashRed(name){
+	if(document.getElementById(name).value == ""){
+		document.getElementById(name).style.backgroundColor = "red";
+		setTimeout(function(){ document.getElementById(name).style.backgroundColor = "white";}, 1000)
+	}
+}
+function Login(){
+	if(document.getElementById('loginUsername').value == ""){
+		document.getElementById("ErrorMessage").innerHTML = "Failed Login Attempt. Missing Username";
+		flashRed('loginUsername');
+		return false;
+	}else if(document.getElementById('loginPassword').value == ""){
+		document.getElementById("ErrorMessage").innerHTML = "Failed Login Attmpt. Missing Password";
+		flashRed('loginPassword');
+		return false;
+	}else{
+			
+	}
+}
+
+function RegisterPlayer(){
+	if(document.getElementById('RegisterPlayerName').value == ""){
+		document.getElementById("ErrorMessage").innerHTML = "Failed attempt to register.  Please input player name.";
+		flashRed('RegisterPlayerName');
+		return false;
+	}else if(document.getElementById('RegisterUsername').value == ""){
+		document.getElementById("ErrorMessage").innerHTML = "Failed attempt to register.  Please input username";
+		flashRed('RegisterUsername');
+		return false;
+	}else if(document.getElementById('RegisterUserPassword').value == ""){
+		document.getElementById("ErrorMessage").innerHTML = "Failed attempt to register.  Please input password";
+		flashRed('RegisterUserPassword');
+		return false;
+	}else{
+		//sessionStorage.username = document.getElementById('RegisterUsername').value;
+	}
+}
+
+function pageLoad(){
+	console.log("index.ejs loaded");
+	var ErrorMsg = <%- ErrorMsg %>;
+	document.getElementById("ErrorMessage").innerHTML = ErrorMsg;
+	sessionStorage.setItem("MainSessionID", null);
+}
+
+
+
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onLoad="pageLoad()">
+
+
+
+
+<p id="ErrorMessage"></p>
+Welcome to the my D&D Note Program!<br>
+I hated roll20's note system, it was awful<br>
+So i've created one of my own.<br>
+Please begin by creating an account or by logging in.<br>
+NOTES:<br>
+Please don't use the back button of your browser.  It may do weird things.<br>
+<hr>
+
+
+<hr>
+<form action="/Login" method="POST">
+	Login:<br>
+	DM Username: <input type="text" id="loginUsername" name="username" value="Dayson"></input><br>
+	Password: <input type="password" id="loginPassword" name="password" value="bacon"></input><br>
+	<button type="submit" onclick="return Login()">Login</button>
+</form>
+<hr>
+<form action="/RegisterAccount" method="POST">
+	Player Name:<input type="text" id="RegisterPlayerName" name="PlayerName" value="David"><br>
+	Username: <input type="text" id="RegisterUsername" name="username"><br>
+	Password: <input type="password" id="RegisterUserPassword" name="password"><br>
+	<button type="submit" onclick="return RegisterPlayer()">Register Player</button>
+</form>
+
+
+</body></html>

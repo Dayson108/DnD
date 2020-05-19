@@ -1,0 +1,68 @@
+<html>
+  <head>
+<title>Test Page</title>
+
+<script>
+function testfun(){
+	socket.emit('Test', "Game Test");
+}
+
+
+function pageLoad(){
+
+	document.getElementById('GameID').value = JSON.parse(sessionStorage.getItem('GameID'));
+}
+
+/*
+function SaveNewNote(){
+
+	socket.emit("SaveNote", Note, GameInfo);
+	
+}
+
+
+
+
+
+<form action="/Views/CreateNote" method="POST">
+	<input type="hidden" name="AccountType" id="AccountType" value=""/>
+	Register as DM<input type="checkbox" id="DMCheck"><br>
+	Player Name:<input type="text" id="RegisterPlayerName" name="PlayerName"><br>
+	Username: <input type="text" id="RegisterUsername" name="username"><br>
+	Password: <input type="password" id="RegisterUserPassword" name="password"><br>
+	<button type="submit">Save</button>
+</form>
+
+
+*/
+
+
+
+/*
+	
+	
+	Image:<input type="text" id="NewNoteImage" name="NewNoteImage" style="width:300px" value="https://github.com/Dayson108/Images/blob/master/Thana%20Brett.jpg?raw=true"><br>
+	Content:<input type="text" id="NewNoteContent" name="NewNoteContent" style="width:300px" value="Female Paladin">
+*/                                                                                                                                                                                                                                                             
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onload="pageLoad()">
+
+
+<form action="/SaveNote" method="POST">
+	Create Note:<br>
+	Name: <input type="text" id="NewNoteName" name="NewNoteName" style="width:300px" value="Thana"><br>
+	Category: <input type="text" id="NewNoteCategory" name="NewNoteCategory" style="width:300px" value="NPC"><br>
+	
+	<input type="hidden" id="GameID" name="GameID"/>
+	<button type="submit">Save</button>
+</form>
+
+
+
+</body></html>
+
+
+
+

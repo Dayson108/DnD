@@ -1,0 +1,173 @@
+5<html>
+  <head>
+<title>DM Game</title>
+<script src="/socket.io/socket.io.js"></script>
+<script>var socket = io('/Lobby');</script>
+<script>
+
+/*TO DO:
+
+on page load, if Games is empty there is a syntax error
+
+*/
+
+
+var AccountInfo;
+
+
+
+socket.on('GameCreateErrorMsg', function(msg){
+	console.log("Game Create Error MSG: " + "Game Name Already Taken");
+	document.getElementById("ErrorMessage").innerHTML = "Game Name Already Taken";
+	
+	document.getElementById("CreateGameGameNameDiv").style.backgroundColor = "red";
+	document.getElementById("ErrorMessage").style.backgroundColor = "red";
+	
+	//setTimeout(function(){ document.getElementById("ErrorMessage").style.backgroundColor = "white";}, 1000)
+});
+
+
+
+socket.on('RecieveGamesList', function(MyGames, ActiveGames){
+	if(MyGames != null){
+		WriteMyGameList(MyGames);
+	}
+	if(ActiveGames != null){
+		WriteActiveGamesList(ActiveGames);
+	}
+});
+
+//function WriteActiveGamesList(TempActiveGames){
+function WriteActiveGamesList(ActiveGames){
+	///////////////////////////////////////////////////////////////////
+	/*
+	var ActiveGames = [];
+	var Game = {
+		GameName: "My Game",
+		DMName: "Steve",
+		Players: [ "David" ]
+	}
+	var Game2 = {
+		GameName: "Fantasy",
+		DMName: "Ken",
+		Players: [ "Soren" , "Sothe" ]
+	}
+	ActiveGames.push(Game);
+	ActiveGames.push(Game2);
+	/////////////////////////////////////////////////////////////////////////
+	*/
+	var HTML = "<br><br>Active Games: <hr><br>";
+	
+	for(var i = 0; i < ActiveGames.length; i++){
+		HTML += "Game " + (i+1);
+		HTML += "<br>Game Name: " + ActiveGames[i].GameName;
+		HTML += "<br>DM Name: " + ActiveGames[i].DMName;
+		HTML += "<br>Players: ";
+		
+		for(var d = 0; d < ActiveGames[i].Players.length; d++){
+			HTML += ActiveGames[i].Players[d] + "  -  ";
+		}
+		HTML += "<hr><br><br>";
+	}
+	
+	document.getElementById("ActiveGames").innerHTML = HTML;
+}
+
+function WriteMyGameList(temp){
+	var Games = JSON.parse(temp);
+	var HTML = '<form action="/DM_Game" method="POST">';
+	
+	for(var i = 0; i < Games.length; i++){
+		if(i=="0"){
+			HTML += '<input type="radio" name="GameName" value="' + Games[i] + '" checked="checked">' + Games[i] + "<br>";
+		}else{
+			HTML += '<input type="radio" name="GameName" value="' + Games[i] + '">' + Games[i] + "<br>";
+		}	
+		/*
+		var option1 = document.createElement("option");
+		var option2 = document.createElement("option");
+		option1.text = Games[i];
+		option2.text = Games[i];
+		document.getElementById("Game1GameList").add(option1);
+		document.getElementById("Game2GameList").add(option2);
+		*/
+	}
+	
+	HTML += '<input type="hidden" id="Game" name="Game" value="0"/>';
+	HTML += '<input type="hidden" id="DMName" name="DMName" value="' + AccountInfo.username + '"/>';
+	
+	HTML += '<br><br><input type="checkbox" id="LoadPrivateGame" checked> Load in Private Mode <br>'
+	HTML += '<button type="submit">Load Game</button></form>';
+	document.getElementById('MyGames').innerHTML = HTML;
+
+}
+
+function ShowCreateGame(){
+	document.getElementById("ActiveGames").style.display = "none";
+	document.getElementById("GamesHeader").style.display = "none";
+	document.getElementById("MyGames").style.display = "none";
+	document.getElementById("CreateGameButton").style.display = "none";
+	document.getElementById("CreateGame").style.display = "block";
+}
+function ShowLobby(){
+	document.getElementById("ActiveGames").style.display = "block";
+	document.getElementById("GamesHeader").style.display = "block";
+	document.getElementById("MyGames").style.display = "block";
+	document.getElementById("CreateGameButton").style.display = "block";
+	document.getElementById("CreateGame").style.display = "none";
+}
+
+
+function CreateGame(){
+	var Game ={
+		DMName: AccountInfo.username,
+		GameName: document.getElementById("CreateGameName").value
+	}
+	socket.emit("DMCreateGame", Game);
+}
+
+socket.on('GameCreateConfirm', function(){
+	ShowLobby();
+	socket.emit("GetGamesList", AccountInfo);
+});
+
+
+
+function pageLoad(){
+	console.log("lobby.ejs loaded");
+	socket.emit("GetGamesList", AccountInfo);
+}
+
+</script>
+</head>
+
+<body bgcolor="#BEC6DD" onload="pageLoad()">
+
+<p id="WelcomeMsg"></p>
+This is the DM Game Page.  
+	<hr>
+	<p id="ErrorMessage"></p>
+	<button id="CreateGameButton" onclick="ShowCreateGame()">Create New Game</button>
+	<p id="GamesHeader">Games:</p>
+	<p id="MyGames"></p>
+	
+
+	<div id="CreateGame" style="display: none;">
+			<div id="CreateGameGameNameDiv">
+				Game Name: <input type="text" id="CreateGameName" name="GameName" style="width: 200px"><br>
+			</div>
+			<br>
+			<button onclick="CreateGame()">Create Game</button>
+		</form>
+	</div>
+	
+	<div id="ActiveGames">
+		<p>There are currently no active games.</p>
+	
+	</div>
+	
+</body></html>
+
+
+
+
